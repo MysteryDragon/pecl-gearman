@@ -27,7 +27,7 @@ static void gearman_client_ctor(INTERNAL_FUNCTION_PARAMETERS) {
 
         if (gearman_client_create(&(client->client)) == NULL) {
                 GEARMAN_EXCEPTION("Memory allocation failure", 0);
-        }    
+        }
 
         client->flags |= GEARMAN_CLIENT_OBJ_CREATED;
         gearman_client_add_options(&(client->client), GEARMAN_CLIENT_FREE_TASKS);
@@ -42,7 +42,7 @@ PHP_FUNCTION(gearman_client_create) {
         if (object_init_ex(return_value, gearman_client_ce) != SUCCESS) {
                 php_error_docref(NULL, E_WARNING, "Object creation failure.");
                 RETURN_FALSE;
-        }    
+        }
 
         gearman_client_ctor(INTERNAL_FUNCTION_PARAM_PASSTHRU);
 }
@@ -112,7 +112,7 @@ PHP_FUNCTION(gearman_client_return_code)
 
         if (zend_parse_method_parameters(ZEND_NUM_ARGS(), getThis(), "O", &zobj, gearman_client_ce) == FAILURE) {
                 RETURN_NULL();
-        }    
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
         RETURN_LONG(obj->ret);
@@ -128,13 +128,13 @@ PHP_FUNCTION(gearman_client_error) {
 
         if (zend_parse_method_parameters(ZEND_NUM_ARGS(), getThis(), "O", &zobj, gearman_client_ce) == FAILURE) {
                 RETURN_NULL();
-        }    
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
         error = (char *)gearman_client_error(&(obj->client));
         if (error) {
-                RETURN_STRING(error)
-        }    
+                RETURN_STRING(error);
+        }
         RETURN_FALSE;
 }
 /* }}} */
@@ -147,10 +147,10 @@ PHP_FUNCTION(gearman_client_get_errno) {
 
         if (zend_parse_method_parameters(ZEND_NUM_ARGS(), getThis(), "O", &zobj, gearman_client_ce) == FAILURE) {
                 RETURN_NULL();
-        }    
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
-        RETURN_LONG(gearman_client_errno(&(obj->client)))
+        RETURN_LONG(gearman_client_errno(&(obj->client)));
 }
 /* }}} */
 
@@ -162,10 +162,10 @@ PHP_FUNCTION(gearman_client_options) {
 
         if (zend_parse_method_parameters(ZEND_NUM_ARGS(), getThis(), "O", &zobj, gearman_client_ce) == FAILURE) {
                 RETURN_NULL();
-        }    
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
-        RETURN_LONG(gearman_client_options(&(obj->client)))
+        RETURN_LONG(gearman_client_options(&(obj->client)));
 }
 /* }}} */
 
@@ -180,7 +180,7 @@ PHP_FUNCTION(gearman_client_set_options) {
 
         if (zend_parse_method_parameters(ZEND_NUM_ARGS(), getThis(), "Ol", &zobj, gearman_client_ce, &options) == FAILURE) {
                 RETURN_FALSE;
-        }    
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
         gearman_client_set_options(&(obj->client), options);
@@ -230,10 +230,10 @@ PHP_FUNCTION(gearman_client_timeout) {
 
         if (zend_parse_method_parameters(ZEND_NUM_ARGS(), getThis(), "O", &zobj, gearman_client_ce) == FAILURE) {
                 RETURN_NULL();
-        }    
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
-        RETURN_LONG(gearman_client_timeout(&(obj->client)))
+        RETURN_LONG(gearman_client_timeout(&(obj->client)));
 }
 /* }}} */
 
@@ -247,7 +247,7 @@ PHP_FUNCTION(gearman_client_set_timeout) {
 
         if (zend_parse_method_parameters(ZEND_NUM_ARGS(), getThis(), "Ol", &zobj, gearman_client_ce, &timeout) == FAILURE) {
                 RETURN_FALSE;
-        }    
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
         gearman_client_set_timeout(&(obj->client), timeout);
@@ -275,14 +275,14 @@ PHP_FUNCTION(gearman_client_add_server) {
 					&port,
 					&setupExceptionHandler) == FAILURE) {
                 RETURN_FALSE;
-        }            
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
         obj->ret = gearman_client_add_server(&(obj->client), host, port);
         if (obj->ret != GEARMAN_SUCCESS) {
                 php_error_docref(NULL, E_WARNING, "%s",
                                                  gearman_client_error(&(obj->client)));
-                RETURN_FALSE;                         
+                RETURN_FALSE;
         }
 
         if (setupExceptionHandler && !gearman_client_set_server_option(&(obj->client), "exceptions", (sizeof("exceptions") - 1))) {
@@ -336,7 +336,7 @@ PHP_FUNCTION(gearman_client_wait) {
 
         if (zend_parse_method_parameters(ZEND_NUM_ARGS(), getThis(), "O", &zobj, gearman_client_ce) == FAILURE) {
                 RETURN_FALSE;
-        }    
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
         obj->ret = gearman_client_wait(&(obj->client));
@@ -345,9 +345,9 @@ PHP_FUNCTION(gearman_client_wait) {
                 if (obj->ret != GEARMAN_TIMEOUT) {
                         php_error_docref(NULL, E_WARNING, "%s",
                                 gearman_client_error(&(obj->client)));
-                }    
+                }
                 RETURN_FALSE;
-        }    
+        }
 
         RETURN_TRUE;
 }
@@ -363,16 +363,16 @@ static void gearman_client_do_work_handler(void* (*do_work_func)(
                                                                 size_t workload_size,
                                                                 size_t *result_size,
                                                                 gearman_return_t *ret_ptr
-                                        ),   
+                                        ),
                                         INTERNAL_FUNCTION_PARAMETERS) {
         char *function_name;
         size_t function_name_len;
         char *workload;
         size_t workload_len;
         char *unique = NULL;
-        size_t unique_len = 0; 
+        size_t unique_len = 0;
         void *result;
-        size_t result_size = 0; 
+        size_t result_size = 0;
 
         gearman_client_obj *obj;
         zval *zobj;
@@ -382,7 +382,7 @@ static void gearman_client_do_work_handler(void* (*do_work_func)(
                                                         &workload, &workload_len,
                                                         &unique, &unique_len) == FAILURE) {
                 RETURN_EMPTY_STRING();
-        }    
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
         result = (char *)(*do_work_func)(
@@ -439,14 +439,14 @@ static void gearman_client_do_background_work_handler(gearman_return_t (*do_back
                                                                 const void *workload,
                                                                 size_t workload_size,
                                                                 gearman_job_handle_t job_handle
-                                        ),   
+                                        ),
                                         INTERNAL_FUNCTION_PARAMETERS) {
         char *function_name;
         size_t function_name_len;
         char *workload;
         size_t workload_len;
         char *unique = NULL;
-        size_t unique_len = 0; 
+        size_t unique_len = 0;
         zend_string *job_handle;
         gearman_client_obj *obj;
         zval *zobj;
@@ -456,7 +456,7 @@ static void gearman_client_do_background_work_handler(gearman_return_t (*do_back
                                                         &workload, &workload_len,
                                                         &unique, &unique_len) == FAILURE) {
                 RETURN_EMPTY_STRING();
-        }    
+        }
 
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
@@ -469,7 +469,7 @@ static void gearman_client_do_background_work_handler(gearman_return_t (*do_back
                                                 (void *)workload,
                                                 (size_t)workload_len,
                                                 job_handle->val
-                                        );   
+                                        );
 
         ZSTR_LEN(job_handle) = strnlen(ZSTR_VAL(job_handle), GEARMAN_JOB_HANDLE_SIZE-1);
 
@@ -518,11 +518,11 @@ PHP_FUNCTION(gearman_client_do_job_handle) {
 
         if (zend_parse_method_parameters(ZEND_NUM_ARGS(), getThis(), "O", &zobj, gearman_client_ce) == FAILURE) {
                 RETURN_EMPTY_STRING();
-        }    
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
 
-        RETURN_STRING((char *)gearman_client_do_job_handle(&(obj->client)))
+        RETURN_STRING((char *)gearman_client_do_job_handle(&(obj->client)));
 }
 /* }}} */
 
@@ -537,7 +537,7 @@ PHP_FUNCTION(gearman_client_do_status) {
 
         if (zend_parse_method_parameters(ZEND_NUM_ARGS(), getThis(), "O", &zobj, gearman_client_ce) == FAILURE) {
                 RETURN_EMPTY_STRING();
-        }            
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
         gearman_client_do_status(&(obj->client), &numerator, &denominator);
@@ -564,7 +564,7 @@ PHP_FUNCTION(gearman_client_job_status) {
         if (zend_parse_method_parameters(ZEND_NUM_ARGS(), getThis(), "Os", &zobj, gearman_client_ce,
                                                                 &job_handle, &job_handle_len) == FAILURE) {
                 RETURN_EMPTY_STRING();
-        }    
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
         obj->ret = gearman_client_job_status(&(obj->client), job_handle,
@@ -573,7 +573,7 @@ PHP_FUNCTION(gearman_client_job_status) {
         if (obj->ret != GEARMAN_SUCCESS && obj->ret != GEARMAN_IO_WAIT) {
                 php_error_docref(NULL, E_WARNING, "%s",
                                                  gearman_client_error(&(obj->client)));
-        }    
+        }
 
         array_init(return_value);
         add_next_index_bool(return_value, is_known);
@@ -594,7 +594,7 @@ PHP_FUNCTION(gearman_client_job_status_by_unique_key) {
         if (zend_parse_method_parameters(ZEND_NUM_ARGS(), getThis(), "Os", &zobj, gearman_client_ce,
                                                                 &unique_key, &unique_key_len) == FAILURE) {
                 RETURN_EMPTY_STRING();
-        }    
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
         gearman_status_t status = gearman_client_unique_status(&(obj->client), unique_key, unique_key_len);
@@ -603,7 +603,7 @@ PHP_FUNCTION(gearman_client_job_status_by_unique_key) {
         if (rc != GEARMAN_SUCCESS && rc != GEARMAN_IO_WAIT) {
                 php_error_docref(NULL, E_WARNING, "%s",
                                                  gearman_client_error(&(obj->client)));
-        }    
+        }
 
         array_init(return_value);
         add_next_index_bool(return_value, gearman_status_is_known(status));
@@ -623,7 +623,7 @@ PHP_FUNCTION(gearman_client_ping) {
 
         if (zend_parse_method_parameters(ZEND_NUM_ARGS(), getThis(), "Os", &zobj, gearman_client_ce, &workload, &workload_len) == FAILURE) {
                 RETURN_FALSE;
-        }    
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
         obj->ret = gearman_client_echo(&(obj->client), workload, (size_t)workload_len);
@@ -632,7 +632,7 @@ PHP_FUNCTION(gearman_client_ping) {
                 php_error_docref(NULL, E_WARNING, "%s",
                                                  gearman_client_error(&(obj->client)));
                 RETURN_FALSE;
-        }    
+        }
 
         RETURN_TRUE;
 }
@@ -656,8 +656,8 @@ static void gearman_client_add_task_handler(gearman_task_st* (*add_task_func)(
 
         char *unique;
         char *function_name;
-        size_t unique_len = 0; 
-        size_t function_name_len = 0; 
+        size_t unique_len = 0;
+        size_t function_name_len = 0;
 
         gearman_client_obj *obj;
         zval *zobj;
@@ -671,12 +671,12 @@ static void gearman_client_add_task_handler(gearman_task_st* (*add_task_func)(
                                                                 &unique, &unique_len
                                                                 ) == FAILURE) {
                 RETURN_FALSE;
-        }    
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
-        if (unique_len == 0) { 
+        if (unique_len == 0) {
           unique = NULL;
-        }    
+        }
 
         if (Z_TYPE_P(zworkload) != IS_STRING) {
                 convert_to_string(zworkload);
@@ -776,7 +776,7 @@ PHP_FUNCTION(gearman_client_run_tasks) {
 
         if (zend_parse_method_parameters(ZEND_NUM_ARGS(), getThis(), "O", &zobj, gearman_client_ce) == FAILURE) {
                 RETURN_FALSE;
-        }    
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
         obj->ret = gearman_client_run_tasks(&(obj->client));
@@ -785,7 +785,7 @@ PHP_FUNCTION(gearman_client_run_tasks) {
                 php_error_docref(NULL, E_WARNING, "%s",
                                                  gearman_client_error(&(obj->client)));
                 RETURN_FALSE;
-        }    
+        }
 
         RETURN_TRUE;
 }
@@ -800,7 +800,7 @@ PHP_FUNCTION(gearman_client_add_task_status) {
         zval *zdata = NULL;
 
         char *job_handle;
-        size_t job_handle_len = 0; 
+        size_t job_handle_len = 0;
 
         gearman_client_obj *obj;
         zval *zobj;
@@ -811,20 +811,20 @@ PHP_FUNCTION(gearman_client_add_task_status) {
                                                                 &zdata
                                                                 ) == FAILURE) {
                 RETURN_FALSE;
-        }    
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
         /* get a task object, and prepare it for return */
         if (object_init_ex(return_value, gearman_task_ce) != SUCCESS) {
                 php_error_docref(NULL, E_WARNING, "GearmanTask Object creation failure.");
                 RETURN_FALSE;
-        }    
+        }
 
            task = Z_GEARMAN_TASK_P(return_value);
 
         if (zdata) {
                    ZVAL_COPY(&task->zdata, zdata);
-        }    
+        }
         /* need to store a ref to the client for later access to cb's */
         ZVAL_COPY(&task->zclient, zobj);
 
@@ -1174,7 +1174,7 @@ PHP_FUNCTION(gearman_client_clear_callbacks) {
 
         if (zend_parse_method_parameters(ZEND_NUM_ARGS(), getThis(), "O", &zobj, gearman_client_ce) == FAILURE) {
                 RETURN_FALSE;
-        }    
+        }
         obj = Z_GEARMAN_CLIENT_P(zobj);
 
         gearman_client_clear_fn(&obj->client);
