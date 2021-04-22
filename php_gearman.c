@@ -13,6 +13,12 @@
 #include "config.h"
 #endif
 
+/* ZEND_ACC_DTOR is removed from PHP 8 */
+/* see https://github.com/php/php-src/commit/08c5c69eff6f0110b373c55ee2246591d14cc82b */
+#ifndef ZEND_ACC_DTOR
+#define ZEND_ACC_DTOR 0
+#endif
+
 #include "php.h"
 #include "php_ini.h"
 #include "ext/standard/info.h"
